@@ -1,4 +1,5 @@
-import Game from "/src/game.js";
+import "../style.css";
+import Game from "./game.js";
 
 console.log(window.innerWidth)
 const canvas = document.querySelector("#gameScreen");

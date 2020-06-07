@@ -1,6 +1,5 @@
-import InputHandler from "/src/input.js";
+import InputHandler from "./input.js";
 import { Ball } from "./entities/Ball.js";
-import {detectCollisions} from "/src/collisionDetection.js";
 import { Cannon } from "./entities/Cannon.js";
 import { Level1 } from "./levels/Level1.js";
 import { Level2 } from "./levels/Level2.js";
