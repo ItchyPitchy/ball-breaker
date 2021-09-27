@@ -1,13 +1,14 @@
 import { Level } from "./Level.js";
-import { Cannon } from "../entities/Cannon.js";
+import { Cannon, Test } from "../entities/Cannon.js";
 import { ShootSystem } from "../systems/ShootSystem.js";
 import { MoveSystem } from "../systems/MoveSystem.js";
 import { CollisionSystem } from "../systems/CollisionSystem.js";
 import { GravitySystem } from "../systems/GravitySystem.js";
 import { DestroySystem } from "../systems/DestroySystem.js";
+import { OutOfBoundsSystem } from "../systems/OutOfBoundsSystem.js";
+import { RoundObstacle } from "../entities/RoundObstacle.js";
 
 export class Level1 extends Level {
-
   constructor(game) {
     super();
     this.structure = [
@@ -18,16 +19,15 @@ export class Level1 extends Level {
       [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
     ];
     this.balls = 12;
-    this.entities = [
-      new Cannon({x: game.gameWidth / 2, y: 20}),
-    ]
+    this.entities = [new Cannon({ x: game.gameWidth / 2, y: 50 })];
 
     this.systems = [
-      new ShootSystem(game, 0),
       new GravitySystem(),
       new MoveSystem(),
+      new OutOfBoundsSystem(),
       new CollisionSystem(),
       new DestroySystem(),
-    ]
+      new ShootSystem(game, 0),
+    ];
   }
 }
