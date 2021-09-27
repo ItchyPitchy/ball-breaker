@@ -1,7 +1,6 @@
 import { System } from "./System.js";
 import { Cannon } from "../entities/Cannon.js";
 import { CannonBall } from "../entities/CannonBall.js";
-import { AimDot } from "../entities/AimDot.js";
 import { CollisionSystem } from "./CollisionSystem.js";
 import { circleFunctions } from "../circleFunctions.js";
 import { Movable } from "../components/Movable.js";
