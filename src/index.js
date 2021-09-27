@@ -1,7 +1,6 @@
-import "../style.css";
+import "./assets/style.css";
 import Game from "./game.js";
 
-console.log(window.innerWidth)
 const canvas = document.querySelector("#gameScreen");
 const ctx = canvas.getContext("2d");
 
@@ -13,7 +12,6 @@ let game = new Game(GAME_WIDTH, GAME_HEIGHT, canvas, ctx);
 let oldTimeStamp;
 
 function gameLoop(timestamp) {
-
   // dt i sekunder
   let dt = (timestamp - oldTimeStamp) / 1000;
   oldTimeStamp = timestamp;
