@@ -18,7 +18,7 @@ export class Level3 extends Level {
       [1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
     ];
     this.balls = 8;
-    this.entities = [new Cannon({ x: game.gameWidth / 2, y: 20 })];
+    this.entities = [new Cannon({ x: game.gameWidth / 2, y: 50 })];
 
     this.systems = [
       new GravitySystem(),
