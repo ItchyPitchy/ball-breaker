@@ -1,3 +1,6 @@
+import { collisionFunctions } from "../collisionFunctions.js";
+import { Collidable } from "../components/Collidable.js";
+import { Destroyable } from "../components/Destroyable.js";
 import { Movable } from "../components/Movable.js";
 import { System } from "./System.js";
 
@@ -8,10 +11,227 @@ export class MoveSystem extends System {
 
   update(entities, dt, game) {
     for (const entity of entities) {
-      const speed = entity.getComponent(Movable).speed;
+      const collidableObjects = game.entities.filter(
+        (object) => object.hasComponent(Collidable) && object !== entity
+      );
 
-      entity.position.x += speed.x * dt;
-      entity.position.y += speed.y * dt;
+      const movable = entity.getComponent(Movable);
+      // console.log("collidableObjects:", collidableObjects);
+
+      // let collisionCount = 0;
+      // const maxCollisions = 3;
+      let currentPosition = entity.position;
+      let currentSpeed = movable.speed;
+
+      // let outOfBounds = false;
+      let timeLeft = 0.016;
+      let count = 0;
+
+      while (count < 50) {
+        count++;
+
+        let earliestCollision;
+
+        console.log("CURRENT SPEED BEFORE:", currentSpeed);
+
+        // wall on right
+        if (
+          currentPosition.x + currentSpeed.x * timeLeft + 16 >=
+          game.gameWidth
+        ) {
+          const timeLeftAfterCollision =
+            timeLeft -
+            timeLeft *
+              Math.abs(
+                (game.gameWidth - 16 - currentPosition.x) /
+                  (currentSpeed.x * timeLeft)
+              );
+          if (
+            !earliestCollision ||
+            timeLeftAfterCollision > earliestCollision.timeLeftAfterCollision
+          ) {
+            earliestCollision = {
+              position: {
+                x:
+                  currentPosition.x +
+                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                y:
+                  currentPosition.y +
+                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+              },
+              timeLeftAfterCollision,
+              resolvement: {
+                x: -currentSpeed.x,
+                y: currentSpeed.y,
+              },
+            };
+          }
+        }
+
+        // wall on left
+        if (currentPosition.x + currentSpeed.x * timeLeft - 16 <= 0) {
+          const timeLeftAfterCollision =
+            timeLeft -
+            timeLeft *
+              Math.abs((currentPosition.x - 16) / (currentSpeed.x * timeLeft));
+
+          if (
+            !earliestCollision ||
+            timeLeftAfterCollision > earliestCollision.timeLeftAfterCollision
+          ) {
+            earliestCollision = {
+              position: {
+                x:
+                  currentPosition.x +
+                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                y:
+                  currentPosition.y +
+                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+              },
+              timeLeftAfterCollision,
+              resolvement: {
+                x: -currentSpeed.x,
+                y: currentSpeed.y,
+              },
+            };
+          }
+        }
+
+        // wall on top
+        if (currentPosition.y + currentSpeed.y * timeLeft - 16 <= 0) {
+          const timeLeftAfterCollision =
+            timeLeft -
+            timeLeft *
+              Math.abs((currentPosition.y - 16) / (currentSpeed.y * timeLeft));
+
+          if (
+            !earliestCollision ||
+            timeLeftAfterCollision > earliestCollision.timeLeftAfterCollision
+          ) {
+            earliestCollision = {
+              position: {
+                x:
+                  currentPosition.x +
+                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                y:
+                  currentPosition.y +
+                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+              },
+              timeLeftAfterCollision,
+              resolvement: {
+                x: currentSpeed.x,
+                y: -currentSpeed.y,
+              },
+            };
+          }
+        }
+
+        // wall on bottom
+        if (
+          currentPosition.y + currentSpeed.y * timeLeft - 16 >=
+          game.gameHeight
+        ) {
+          const timeLeftAfterCollision =
+            timeLeft -
+            timeLeft *
+              Math.abs(
+                (game.gameHeight - currentPosition.y + 16) /
+                  (currentSpeed.y * timeLeft)
+              );
+
+          if (
+            !earliestCollision ||
+            timeLeftAfterCollision > earliestCollision.timeLeftAfterCollision
+          ) {
+            earliestCollision = {
+              position: {
+                x:
+                  currentPosition.x +
+                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                y:
+                  currentPosition.y +
+                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+              },
+              timeLeftAfterCollision,
+              resolvement: {
+                x: currentSpeed.x,
+                y: currentSpeed.y,
+              },
+              outOfBounds: true,
+            };
+          }
+        }
+
+        for (const object of collidableObjects) {
+          if (
+            object.markedForDeletion ||
+            (object.hasComponent(Destroyable) &&
+              object.getComponent(Destroyable).hits <= 0)
+          ) {
+            continue;
+          }
+
+          const collision = collisionFunctions.getCollision(
+            currentPosition,
+            currentSpeed,
+            object,
+            timeLeft
+          );
+
+          if (collision) {
+            if (
+              !earliestCollision ||
+              collision.timeLeftAfterCollision >
+                earliestCollision.timeLeftAfterCollision
+            ) {
+              earliestCollision = collision;
+            }
+          }
+        }
+
+        if (earliestCollision) {
+          if (earliestCollision.outOfBounds) {
+            entity.markedForDeletion = true;
+            // outOfBounds = true;
+            break;
+          }
+
+          if (
+            earliestCollision.obstacle &&
+            earliestCollision.obstacle.hasComponent(Destroyable)
+          ) {
+            earliestCollision.obstacle.getComponent(Destroyable).hits--;
+          }
+
+          currentPosition = {
+            x: earliestCollision.position.x,
+            y: earliestCollision.position.y,
+          };
+
+          currentSpeed = {
+            x: earliestCollision.resolvement.x,
+            y: earliestCollision.resolvement.y,
+          };
+
+          timeLeft = earliestCollision.timeLeftAfterCollision;
+
+          console.log("COLLISION:", earliestCollision);
+        } else {
+          currentPosition.x = currentPosition.x + currentSpeed.x * timeLeft;
+          currentPosition.y = currentPosition.y + currentSpeed.y * timeLeft;
+          break;
+        }
+      }
+
+      entity.position = currentPosition;
+      movable.speed = currentSpeed;
     }
   }
+  //   for (const entity of entities) {
+  //     const speed = entity.getComponent(Movable).speed;
+
+  //     entity.position.x += speed.x * dt;
+  //     entity.position.y += speed.y * dt;
+  //   }
+  // }
 }

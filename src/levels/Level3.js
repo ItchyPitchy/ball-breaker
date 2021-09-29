@@ -6,6 +6,7 @@ import { CollisionSystem } from "../systems/CollisionSystem.js";
 import { GravitySystem } from "../systems/GravitySystem.js";
 import { DestroySystem } from "../systems/DestroySystem.js";
 import { OutOfBoundsSystem } from "../systems/OutOfBoundsSystem.js";
+import { DeleteSystem } from "../systems/DeleteSystem.js";
 
 export class Level3 extends Level {
   constructor(game) {
@@ -23,9 +24,8 @@ export class Level3 extends Level {
     this.systems = [
       new GravitySystem(),
       new MoveSystem(),
-      new OutOfBoundsSystem(),
-      new CollisionSystem(),
       new DestroySystem(),
+      new DeleteSystem(),
       new ShootSystem(game, 2),
     ];
   }
