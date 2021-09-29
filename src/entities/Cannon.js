@@ -19,4 +19,16 @@ export class Cannon extends Entity {
 
     ctx.restore();
   }
+
+  clone() {
+    const clone = new Cannon(this.position);
+    const components = this.components.map((component) => component.clone());
+
+    clone.degrees = this.degrees;
+    clone.markedForDeletion = this.markedForDeletion;
+
+    clone.addComponents(components);
+
+    return clone;
+  }
 }

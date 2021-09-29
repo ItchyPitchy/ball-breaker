@@ -1,7 +1,11 @@
 import { System } from "./System.js";
 
 export class DeleteSystem extends System {
-  appliesTo(entity) {
+  constructor() {
+    super();
+  }
+
+  appliesTo() {
     return true;
   }
 
@@ -12,5 +16,9 @@ export class DeleteSystem extends System {
         console.log("R E M O V E _ _ _ E N T I T Y");
       }
     }
+  }
+
+  clone() {
+    return new DeleteSystem();
   }
 }

@@ -2,6 +2,10 @@ import { Movable } from "../components/Movable.js";
 import { System } from "./System.js";
 
 export class OutOfBoundsSystem extends System {
+  constructor() {
+    super();
+  }
+
   appliesTo(entity) {
     return entity.inBoundsOnly && entity.hasComponent(Movable);
   }
@@ -33,5 +37,9 @@ export class OutOfBoundsSystem extends System {
         game.entities = game.entities.filter((element) => element !== entity);
       }
     }
+  }
+
+  clone() {
+    return new OutOfBoundsSystem();
   }
 }

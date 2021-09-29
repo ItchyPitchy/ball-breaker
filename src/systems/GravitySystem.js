@@ -3,6 +3,10 @@ import { Physical } from "../components/Physical.js";
 import { Movable } from "../components/Movable.js";
 
 export class GravitySystem extends System {
+  constructor() {
+    super();
+  }
+
   appliesTo(entity) {
     return entity.hasComponent(Physical) && entity.hasComponent(Movable);
   }
@@ -13,5 +17,9 @@ export class GravitySystem extends System {
       const fallSpeed = entity.getComponent(Physical).fallSpeed;
       movable.speed.y += fallSpeed * dt;
     }
+  }
+
+  clone() {
+    return new GravitySystem();
   }
 }

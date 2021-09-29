@@ -19,7 +19,7 @@ import { RoundObstacle } from "./entities/RoundObstacle.js";
 // }
 
 export default class Game {
-  constructor(gameWidth, gameHeight, canvas, ctx) {
+  constructor(gameWidth, gameHeight, ctx) {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.ctx = ctx;
@@ -48,7 +48,7 @@ export default class Game {
 
     this.levels = [new Level1(this), new Level2(this), new Level3(this)];
 
-    this.currentLevel = 2;
+    this.currentLevel = 0;
     this.systems = [];
     this.entities = [];
   }
@@ -206,5 +206,18 @@ export default class Game {
       ctx.textAlign = "center";
       ctx.fillText("You won!", this.gameWidth / 2, this.gameHeight / 2);
     }
+  }
+
+  clone() {
+    const game = new Game(this.gameWidth, this.gameHeight, this.ctx);
+
+    game.gamestate = this.gamestate;
+    game.currentLevel = this.currentLevel;
+    game.input = new InputHandler(game);
+    game.entities = this.entities.map((entity) => entity.clone());
+    game.systems = this.systems.map((system) => system.clone(game));
+    game.levels = this.levels.map((level) => level.clone(game));
+
+    return game;
   }
 }

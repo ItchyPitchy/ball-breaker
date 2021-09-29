@@ -1,6 +1,9 @@
 export class Movable {
-
   constructor(speed) {
-      this.speed = speed || {x: 0, y: 0};
+    this.speed = speed;
+  }
+
+  clone() {
+    return new Movable(this.speed);
   }
 }

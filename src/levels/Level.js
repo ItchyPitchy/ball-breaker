@@ -1,11 +1,40 @@
-import { CannonBall } from "../entities/CannonBall.js";
 import { RoundObstacle } from "../entities/RoundObstacle.js";
 
 export class Level {
-  constructor() {
-    this.entities = [];
-    this.systems = [];
-    this.structure = [];
+  constructor(entities, systems, structure, balls) {
+    this.entities = entities;
+    this.systems = systems;
+    this.structure = structure;
+    this.balls = balls;
+    this.components = [];
+  }
+
+  getComponent(type) {
+    for (const component of this.components) {
+      if (component instanceof type) {
+        return component;
+      }
+    }
+  }
+
+  addComponents(...components) {
+    for (const component of components) {
+      this.components.push(component);
+    }
+  }
+
+  hasComponent(type) {
+    for (const component of this.components) {
+      if (component instanceof type) {
+        return true;
+      }
+    }
+  }
+
+  removeComponent(type) {
+    this.components = this.components.filter(
+      (component) => component instanceof type
+    );
   }
 
   buildLevel(structure, game) {

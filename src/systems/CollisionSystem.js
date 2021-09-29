@@ -1,6 +1,5 @@
 import { System } from "./System.js";
 import { Collidable } from "../components/Collidable.js";
-import { Movable } from "../components/Movable.js";
 import { Destroyable } from "../components/Destroyable.js";
 import { circleFunctions } from "../circleFunctions.js";
 
@@ -29,5 +28,8 @@ export class CollisionSystem extends System {
         }
       }
     }
+  }
+  clone() {
+    return new CollisionSystem();
   }
 }

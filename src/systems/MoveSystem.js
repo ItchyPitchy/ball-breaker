@@ -5,6 +5,10 @@ import { Movable } from "../components/Movable.js";
 import { System } from "./System.js";
 
 export class MoveSystem extends System {
+  constructor() {
+    super();
+  }
+
   appliesTo(entity) {
     return entity.hasComponent(Movable);
   }
@@ -227,11 +231,8 @@ export class MoveSystem extends System {
       movable.speed = currentSpeed;
     }
   }
-  //   for (const entity of entities) {
-  //     const speed = entity.getComponent(Movable).speed;
 
-  //     entity.position.x += speed.x * dt;
-  //     entity.position.y += speed.y * dt;
-  //   }
-  // }
+  clone() {
+    return new MoveSystem();
+  }
 }

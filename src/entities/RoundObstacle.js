@@ -3,7 +3,7 @@ import { Collidable } from "../components/Collidable.js";
 import { Destroyable } from "../components/Destroyable.js";
 
 export class RoundObstacle extends Entity {
-  constructor(position, radii, lives) {
+  constructor(position, radii, lives = 1) {
     super(position);
     this.radii = radii;
     this.addComponents(new Collidable(), new Destroyable(lives));
@@ -24,5 +24,16 @@ export class RoundObstacle extends Entity {
     ctx.beginPath();
     ctx.arc(this.position.x, this.position.y, this.radii, 0, 2 * Math.PI);
     ctx.fill();
+  }
+
+  clone() {
+    const clone = new RoundObstacle(this.position, this.radii);
+    const components = this.components.map((component) => component.clone());
+
+    clone.markedForDeletion = this.markedForDeletion;
+
+    clone.addComponents(components);
+
+    return clone;
   }
 }

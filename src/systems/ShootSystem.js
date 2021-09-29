@@ -374,4 +374,8 @@ export class ShootSystem extends System {
     //   }
     // }
   }
+
+  clone() {
+    return new ShootSystem();
+  }
 }

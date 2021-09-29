@@ -2,6 +2,10 @@ import { Destroyable } from "../components/Destroyable.js";
 import { System } from "./System.js";
 
 export class DestroySystem extends System {
+  constructor() {
+    super();
+  }
+
   appliesTo(entity) {
     return entity.hasComponent(Destroyable);
   }
@@ -14,5 +18,9 @@ export class DestroySystem extends System {
         entity.markedForDeletion = true;
       }
     }
+  }
+
+  clone() {
+    return new DestroySystem();
   }
 }
