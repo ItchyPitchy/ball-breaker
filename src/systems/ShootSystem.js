@@ -105,7 +105,7 @@ export class ShootSystem extends System {
 
         const collidableObjects = game.entities.filter(
           (entity) =>
-            entity.hasComponent(Collidable) && entity !== typeof CannonBall
+            entity.hasComponent(Collidable) && !(entity instanceof CannonBall)
         );
 
         let outOfBounds = false;
