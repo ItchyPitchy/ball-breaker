@@ -3,6 +3,7 @@ export class Entity {
     this.components = [];
     this.position = position;
     this.inBoundsOnly = inBoundsOnly;
+    this.markedForDeletion = false;
   }
 
   getComponent(type) {
