@@ -36,8 +36,6 @@ export class MoveSystem extends System {
 
         let earliestCollision;
 
-        console.log("CURRENT SPEED BEFORE:", currentSpeed);
-
         // wall on right
         if (
           currentPosition.x + currentSpeed.x * timeLeft + 16 >=
@@ -178,6 +176,7 @@ export class MoveSystem extends System {
           const collision = collisionFunctions.getCollision(
             currentPosition,
             currentSpeed,
+            entity.getComponent(Collidable).restitution,
             object,
             timeLeft
           );

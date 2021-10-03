@@ -264,6 +264,7 @@ export class ShootSystem extends System {
               const collision = collisionFunctions.getCollision(
                 currentPosition,
                 currentSpeed,
+                0.95,
                 object,
                 timeLeft
               );

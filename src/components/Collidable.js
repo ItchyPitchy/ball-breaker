@@ -1,6 +1,7 @@
 export class Collidable {
-  constructor() {
+  constructor(restitution) {
     this.shape;
+    this.restitution = restitution;
   }
 
   clone() {

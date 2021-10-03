@@ -7,7 +7,11 @@ export class CannonBall extends Entity {
   constructor(position, radii, speed = { x: 0, y: 0 }) {
     super(position, true);
     this.radii = radii;
-    this.addComponents(new Physical(500), new Movable(speed), new Collidable());
+    this.addComponents(
+      new Physical(500),
+      new Movable(speed),
+      new Collidable(0.95)
+    );
   }
 
   draw(ctx) {

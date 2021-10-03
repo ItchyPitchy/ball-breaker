@@ -6,7 +6,7 @@ export class RoundObstacle extends Entity {
   constructor(position, radii, lives = 1) {
     super(position);
     this.radii = radii;
-    this.addComponents(new Collidable(), new Destroyable(lives));
+    this.addComponents(new Collidable(1), new Destroyable(lives));
   }
 
   draw(ctx) {
