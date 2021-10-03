@@ -1,5 +1,7 @@
+import { Collidable } from "./components/Collidable";
+
 export const collisionFunctions = {
-  getCollision: (position, speed, obstacle, time) => {
+  getCollision: (position, speed, restitution, obstacle, time) => {
     // Early Escape test: if the length of the movevec is less
     // than distance between the centers of these circles minus
     // their radii, there's no way they can hit.
@@ -30,26 +32,21 @@ export const collisionFunctions = {
     // Find C, the vector from the center of the moving
     // circle A to the center of B
     const vectorC = {
-      x: position.x - obstacle.position.x,
-      y: position.y - obstacle.position.y,
+      x: obstacle.position.x - position.x,
+      y: obstacle.position.y - position.y,
     };
 
     // Find the length of the vector C
     const lengthC = Math.sqrt(Math.pow(vectorC.x, 2) + Math.pow(vectorC.y, 2));
 
     // D = N . C = ||C|| * cos(angle between N and C)
-    const D = Math.abs(
-      moveVectorNorm.x * vectorC.x + moveVectorNorm.y * vectorC.y
-    );
-
-    const dontAskMeWhy =
-      moveVectorNorm.x * vectorC.x + moveVectorNorm.y * vectorC.y;
+    const D = moveVectorNorm.x * vectorC.x + moveVectorNorm.y * vectorC.y;
 
     // Another early escape: Make sure that A is moving
     // towards B! If the dot product between the movevec and
     // B.center - A.center is less that or equal to 0,
     // A isn't isn't moving towards B
-    if (dontAskMeWhy >= 0) {
+    if (D <= 0) {
       return;
     }
 
@@ -118,8 +115,12 @@ export const collisionFunctions = {
     const dot = speed.x * vCollisionNorm.x + speed.y * vCollisionNorm.y;
 
     const resolvement = {
-      x: speed.x - 2 * dot * vCollisionNorm.x,
-      y: speed.y - 2 * dot * vCollisionNorm.y,
+      x:
+        (speed.x - 2 * dot * vCollisionNorm.x) *
+        Math.min(restitution, obstacle.getComponent(Collidable).restitution),
+      y:
+        (speed.y - 2 * dot * vCollisionNorm.y) *
+        Math.min(restitution, obstacle.getComponent(Collidable).restitution),
     };
 
     return {
