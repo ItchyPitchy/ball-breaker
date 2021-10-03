@@ -1,3 +1,5 @@
+import { Vector } from "../components/Vector";
+
 export class Entity {
   constructor(position, inBoundsOnly = false) {
     this.components = [];
@@ -10,6 +12,13 @@ export class Entity {
     return Math.sqrt(
       Math.pow(this.position.x - entity.position.x, 2) +
         Math.pow(this.position.y - entity.position.y, 2)
+    );
+  }
+
+  vectorTo(entity) {
+    return new Vector(
+      this.position.x - entity.position.x,
+      this.position.y - entity.position.y
     );
   }
 
