@@ -1,5 +1,6 @@
 import { Collidable } from "./components/Collidable";
 import { Vector } from "./components/Vector";
+import { Entity } from "./entities/Entity";
 
 export const collisionFunctions = {
   getCollision: (entity, obstacle, time) => {
@@ -7,44 +8,30 @@ export const collisionFunctions = {
     // Early Escape test: if the length of the movevec is less
     // than distance between the centers of these circles minus
     // their radii, there's no way they can hit.
-    const moveVector = {
-      x: vector.x * time,
-      y: vector.y * time,
-    };
+    const moveVector = new Vector(vector.x * time, vector.y * time);
 
-    // const distanceBetweenObjects = entity.distanceTo(obstacle);
-    const distSquare =
-      Math.pow(entity.position.x - obstacle.position.x, 2) +
-      Math.pow(entity.position.y - obstacle.position.y, 2);
+    const distanceBetweenObjects = entity.distanceTo(obstacle);
 
     const sumRadii = entity.radii + obstacle.radii;
 
-    const moveVectorMag = Math.sqrt(
-      Math.pow(moveVector.x, 2) + Math.pow(moveVector.y, 2)
-    );
+    const moveVectorMag = moveVector.magnitude();
 
-    if (Math.pow(moveVectorMag + sumRadii, 2) <= distSquare) {
+    if (moveVectorMag + sumRadii <= distanceBetweenObjects) {
       return;
     }
 
     // Normalize the movevec
-    const moveVectorNorm = {
-      x: moveVector.x / moveVectorMag,
-      y: moveVector.y / moveVectorMag,
-    };
+    const moveVectorNorm = moveVector.norm();
 
     // Find C, the vector from the center of the moving
     // circle A to the center of B
-    const vectorC = {
-      x: obstacle.position.x - entity.position.x,
-      y: obstacle.position.y - entity.position.y,
-    };
+    const vectorC = obstacle.vectorTo(entity);
 
     // Find the length of the vector C
-    const lengthC = Math.sqrt(Math.pow(vectorC.x, 2) + Math.pow(vectorC.y, 2));
+    const lengthC = vectorC.magnitude();
 
     // D = N . C = ||C|| * cos(angle between N and C)
-    const D = moveVectorNorm.x * vectorC.x + moveVectorNorm.y * vectorC.y;
+    const D = vectorC.dot(moveVectorNorm);
 
     // Another early escape: Make sure that A is moving
     // towards B! If the dot product between the movevec and
@@ -88,29 +75,15 @@ export const collisionFunctions = {
       return;
     }
 
-    // Set the length of the movevec so that the circles will just
-    // touch
+    // resolve collision
     const collisionPosition = {
       x: entity.position.x + moveVectorNorm.x * distance,
       y: entity.position.y + moveVectorNorm.y * distance,
     };
-
-    // resolve collision
-    const vCollision = {
-      x: collisionPosition.x - obstacle.position.x,
-      y: collisionPosition.y - obstacle.position.y,
-    };
-
-    const distanceBetweenObjectsLength = Math.sqrt(
-      Math.pow(vCollision.x, 2) + Math.pow(vCollision.y, 2)
-    );
-
-    const vCollisionNorm = {
-      x: vCollision.x / distanceBetweenObjectsLength,
-      y: vCollision.y / distanceBetweenObjectsLength,
-    };
-
-    const dot = vector.x * vCollisionNorm.x + vector.y * vCollisionNorm.y;
+    const tempEntity = new Entity(collisionPosition);
+    const vCollision = tempEntity.vectorTo(obstacle);
+    const vCollisionNorm = vCollision.norm();
+    const dot = vector.dot(vCollisionNorm);
 
     const resolvement = {
       x:
