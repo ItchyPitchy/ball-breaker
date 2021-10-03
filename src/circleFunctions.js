@@ -30,10 +30,10 @@ export const circleFunctions = {
     }
   },
   circleIntersect: (entity1, entity2) => {
-    const r1 = entity1.radii;
+    const r1 = entity1.radius;
     const { x: x1, y: y1 } = entity1.position;
 
-    const r2 = entity2.radii;
+    const r2 = entity2.radius;
     const { x: x2, y: y2 } = entity2.position;
 
     // Calculate the square distance between the two circles

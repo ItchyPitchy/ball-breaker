@@ -49,10 +49,10 @@ export function detectCollisions(gameObjects) {
         circleIntersect(
           obj1.position.x,
           obj1.position.y,
-          obj1.radii,
+          obj1.radius,
           obj2.position.x,
           obj2.position.y,
-          obj2.radii
+          obj2.radius
         )
       ) {
         obj1.isColliding = true;
@@ -70,7 +70,7 @@ export function detectCollisions(gameObjects) {
           const ny = Math.cos(angle1);
           const dot = obj2.speed.x * nx + obj2.speed.y * ny;
 
-          const radiis = obj1.radii + obj2.radii;
+          const radiis = obj1.radius + obj2.radius;
           let obj2ColliPos;
 
           if (obj1.position.x <= obj2.position.x) {
@@ -169,7 +169,7 @@ export function detectCollisions(gameObjects) {
 
           // }
 
-          const radiis = obj1.radii + obj2.radii;
+          const radiis = obj1.radius + obj2.radius;
           let obj2ColliPos;
 
           if (obj1.position.x >= obj2.position.x) {

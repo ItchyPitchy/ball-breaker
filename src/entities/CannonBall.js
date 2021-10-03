@@ -4,9 +4,9 @@ import { Vector } from "../components/Vector.js";
 import { Collidable } from "../components/Collidable.js";
 
 export class CannonBall extends Entity {
-  constructor(position, radii, velocity = { x: 0, y: 0 }) {
+  constructor(position, radius, velocity = { x: 0, y: 0 }) {
     super(position, true);
-    this.radii = radii;
+    this.radius = radius;
     this.addComponents(
       new Physical(500),
       new Vector(velocity.x, velocity.y),
@@ -17,12 +17,12 @@ export class CannonBall extends Entity {
   draw(ctx) {
     ctx.fillStyle = "#00f";
     ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, this.radii, 0, 2 * Math.PI);
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
     ctx.fill();
   }
 
   clone() {
-    const clone = new CannonBall(this.position, this.radii);
+    const clone = new CannonBall(this.position, this.radius);
     clone.components = [];
 
     const components = this.components.map((component) => component.clone());

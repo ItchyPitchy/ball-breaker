@@ -12,11 +12,11 @@ export const collisionFunctions = {
 
     const distanceBetweenObjects = entity.distanceTo(obstacle);
 
-    const sumRadii = entity.radii + obstacle.radii;
+    const radii = entity.radius + obstacle.radius;
 
     const moveVectorMag = moveVector.magnitude();
 
-    if (moveVectorMag + sumRadii <= distanceBetweenObjects) {
+    if (moveVectorMag + radii <= distanceBetweenObjects) {
       return;
     }
 
@@ -46,15 +46,15 @@ export const collisionFunctions = {
     // Escape test: if the closest that A will get to B
     // is more than the sum of their radii, there's no
     // way they are going collide
-    const sumRadiiSquared = sumRadii * sumRadii;
+    const radiiSquared = radii * radii;
 
-    if (F >= sumRadiiSquared) {
+    if (F >= radiiSquared) {
       return;
     }
 
     // We now have F and sumRadii, two sides of a right triangle.
     // Use these to find the third side, sqrt(T)
-    const T = sumRadiiSquared - F;
+    const T = radiiSquared - F;
 
     // If there is no such right triangle with sides length of
     // sumRadii and sqrt(f), T will probably be less than 0.
