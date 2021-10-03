@@ -5,6 +5,6 @@ export class Collidable {
   }
 
   clone() {
-    return new Collidable(this.shape);
+    return new Collidable(this.restitution);
   }
 }
