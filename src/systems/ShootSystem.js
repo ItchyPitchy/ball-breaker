@@ -260,11 +260,15 @@ export class ShootSystem extends System {
               }
             }
 
+            const cannonBall = new CannonBall(
+              currentPosition,
+              16,
+              currentSpeed
+            );
+
             for (const object of collidableObjects) {
               const collision = collisionFunctions.getCollision(
-                currentPosition,
-                currentSpeed,
-                0.95,
+                cannonBall,
                 object,
                 timeLeft
               );

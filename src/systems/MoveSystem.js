@@ -20,14 +20,7 @@ export class MoveSystem extends System {
       );
 
       const vector = entity.getComponent(Vector);
-      // console.log("collidableObjects:", collidableObjects);
 
-      // let collisionCount = 0;
-      // const maxCollisions = 3;
-      let currentPosition = entity.position;
-      let currentSpeed = { x: vector.x, y: vector.y };
-
-      // let outOfBounds = false;
       let timeLeft = 0.016;
       let count = 0;
 
@@ -37,16 +30,13 @@ export class MoveSystem extends System {
         let earliestCollision;
 
         // wall on right
-        if (
-          currentPosition.x + currentSpeed.x * timeLeft + 16 >=
-          game.gameWidth
-        ) {
+        if (entity.position.x + vector.x * timeLeft + 16 >= game.gameWidth) {
           const timeLeftAfterCollision =
             timeLeft -
             timeLeft *
               Math.abs(
-                (game.gameWidth - 16 - currentPosition.x) /
-                  (currentSpeed.x * timeLeft)
+                (game.gameWidth - 16 - entity.position.x) /
+                  (vector.x * timeLeft)
               );
           if (
             !earliestCollision ||
@@ -55,27 +45,27 @@ export class MoveSystem extends System {
             earliestCollision = {
               position: {
                 x:
-                  currentPosition.x +
-                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                  entity.position.x +
+                  vector.x * (timeLeft - timeLeftAfterCollision),
                 y:
-                  currentPosition.y +
-                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+                  entity.position.y +
+                  vector.y * (timeLeft - timeLeftAfterCollision),
               },
               timeLeftAfterCollision,
               resolvement: {
-                x: -currentSpeed.x,
-                y: currentSpeed.y,
+                x: -vector.x,
+                y: vector.y,
               },
             };
           }
         }
 
         // wall on left
-        if (currentPosition.x + currentSpeed.x * timeLeft - 16 <= 0) {
+        if (entity.position.x + vector.x * timeLeft - 16 <= 0) {
           const timeLeftAfterCollision =
             timeLeft -
             timeLeft *
-              Math.abs((currentPosition.x - 16) / (currentSpeed.x * timeLeft));
+              Math.abs((entity.position.x - 16) / (vector.x * timeLeft));
 
           if (
             !earliestCollision ||
@@ -84,27 +74,27 @@ export class MoveSystem extends System {
             earliestCollision = {
               position: {
                 x:
-                  currentPosition.x +
-                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                  entity.position.x +
+                  vector.x * (timeLeft - timeLeftAfterCollision),
                 y:
-                  currentPosition.y +
-                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+                  entity.position.y +
+                  vector.y * (timeLeft - timeLeftAfterCollision),
               },
               timeLeftAfterCollision,
               resolvement: {
-                x: -currentSpeed.x,
-                y: currentSpeed.y,
+                x: -vector.x,
+                y: vector.y,
               },
             };
           }
         }
 
         // wall on top
-        if (currentPosition.y + currentSpeed.y * timeLeft - 16 <= 0) {
+        if (entity.position.y + vector.y * timeLeft - 16 <= 0) {
           const timeLeftAfterCollision =
             timeLeft -
             timeLeft *
-              Math.abs((currentPosition.y - 16) / (currentSpeed.y * timeLeft));
+              Math.abs((entity.position.y - 16) / (vector.y * timeLeft));
 
           if (
             !earliestCollision ||
@@ -113,32 +103,29 @@ export class MoveSystem extends System {
             earliestCollision = {
               position: {
                 x:
-                  currentPosition.x +
-                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                  entity.position.x +
+                  vector.x * (timeLeft - timeLeftAfterCollision),
                 y:
-                  currentPosition.y +
-                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+                  entity.position.y +
+                  vector.y * (timeLeft - timeLeftAfterCollision),
               },
               timeLeftAfterCollision,
               resolvement: {
-                x: currentSpeed.x,
-                y: -currentSpeed.y,
+                x: vector.x,
+                y: -vector.y,
               },
             };
           }
         }
 
         // wall on bottom
-        if (
-          currentPosition.y + currentSpeed.y * timeLeft - 16 >=
-          game.gameHeight
-        ) {
+        if (entity.position.y + vector.y * timeLeft - 16 >= game.gameHeight) {
           const timeLeftAfterCollision =
             timeLeft -
             timeLeft *
               Math.abs(
-                (game.gameHeight - currentPosition.y + 16) /
-                  (currentSpeed.y * timeLeft)
+                (game.gameHeight - entity.position.y + 16) /
+                  (vector.y * timeLeft)
               );
 
           if (
@@ -148,21 +135,23 @@ export class MoveSystem extends System {
             earliestCollision = {
               position: {
                 x:
-                  currentPosition.x +
-                  currentSpeed.x * (timeLeft - timeLeftAfterCollision),
+                  entity.position.x +
+                  vector.x * (timeLeft - timeLeftAfterCollision),
                 y:
-                  currentPosition.y +
-                  currentSpeed.y * (timeLeft - timeLeftAfterCollision),
+                  entity.position.y +
+                  vector.y * (timeLeft - timeLeftAfterCollision),
               },
               timeLeftAfterCollision,
               resolvement: {
-                x: currentSpeed.x,
-                y: currentSpeed.y,
+                x: vector.x,
+                y: vector.y,
               },
               outOfBounds: true,
             };
           }
         }
+
+        // const cannonBall = entity.clone();
 
         for (const object of collidableObjects) {
           if (
@@ -174,9 +163,7 @@ export class MoveSystem extends System {
           }
 
           const collision = collisionFunctions.getCollision(
-            currentPosition,
-            currentSpeed,
-            entity.getComponent(Collidable).restitution,
+            entity,
             object,
             timeLeft
           );
@@ -206,27 +193,21 @@ export class MoveSystem extends System {
             earliestCollision.obstacle.getComponent(Destroyable).hits--;
           }
 
-          currentPosition = {
+          entity.position = {
             x: earliestCollision.position.x,
             y: earliestCollision.position.y,
           };
 
-          currentSpeed = {
-            x: earliestCollision.resolvement.x,
-            y: earliestCollision.resolvement.y,
-          };
+          vector.x = earliestCollision.resolvement.x;
+          vector.y = earliestCollision.resolvement.y;
 
           timeLeft = earliestCollision.timeLeftAfterCollision;
         } else {
-          currentPosition.x = currentPosition.x + currentSpeed.x * timeLeft;
-          currentPosition.y = currentPosition.y + currentSpeed.y * timeLeft;
+          entity.position.x = entity.position.x + vector.x * timeLeft;
+          entity.position.y = entity.position.y + vector.y * timeLeft;
           break;
         }
       }
-
-      entity.position = currentPosition;
-      vector.x = currentSpeed.x;
-      vector.y = currentSpeed.y;
     }
   }
 
