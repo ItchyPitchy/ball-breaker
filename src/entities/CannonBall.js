@@ -22,12 +22,13 @@ export class CannonBall extends Entity {
   }
 
   clone() {
-    const clone = new CannonBall(this.position, this.radii, this.speed);
+    const clone = new CannonBall(this.position, this.radii);
+    clone.components = [];
+
     const components = this.components.map((component) => component.clone());
+    clone.addComponents(...components);
 
     clone.markedForDeletion = this.markedForDeletion;
-
-    clone.addComponents(components);
 
     return clone;
   }
