@@ -1,5 +1,5 @@
 import { Destroyable } from "./components/Destroyable";
-import { Movable } from "./components/Movable";
+import { Vector } from "./components/Vector";
 
 export const circleFunctions = {
   resolveCollision: (entity1, entity2, dt, game) => {
@@ -13,17 +13,17 @@ export const circleFunctions = {
       return;
     }
 
-    if (entity1.hasComponent(Movable) && entity2.hasComponent(Movable)) {
+    if (entity1.hasComponent(Vector) && entity2.hasComponent(Vector)) {
       circleFunctions.resolveCollisionBetweenMovingObjects(entity1, entity2);
-    } else if (entity1.hasComponent(Movable)) {
+    } else if (entity1.hasComponent(Vector)) {
       circleFunctions.resolveCollisionWithStationaryObject(
-        { ...entity1, speed: entity1.getComponent(Movable).speed },
+        { ...entity1, vector: entity1.getComponent(Vector).speed },
         entity2,
         dt
       );
     } else {
       circleFunctions.resolveCollisionWithStationaryObject(
-        { ...entity2, speed: entity2.getComponent(Movable).speed },
+        { ...entity2, speed: entity2.getComponent(Vector) },
         entity1,
         dt
       );
@@ -44,8 +44,8 @@ export const circleFunctions = {
     return squareDistance <= Math.pow(r1 + r2, 2);
   },
   resolveCollisionBetweenMovingObjects: (entity1, entity2) => {
-    const movable1 = entity1.getComponent(Movable);
-    const movable2 = entity2.getComponent(Movable);
+    const vector1 = entity1.getComponent(Vector);
+    const vector2 = entity2.getComponent(Vector);
 
     const vCollision = {
       x: entity2.position.x - entity1.position.x,
@@ -62,8 +62,8 @@ export const circleFunctions = {
       y: vCollision.y / distance,
     };
     const vRelativeVelocity = {
-      x: movable1.speed.x - movable2.speed.x,
-      y: movable1.speed.y - movable2.speed.y,
+      x: vector1.speed.x - vector2.speed.x,
+      y: vector1.speed.y - vector2.speed.y,
     };
     const speed =
       vRelativeVelocity.x * vCollisionNorm.x +
@@ -71,10 +71,10 @@ export const circleFunctions = {
 
     if (speed < 0) return;
 
-    movable1.speed.x -= speed * vCollisionNorm.x;
-    movable1.speed.y -= speed * vCollisionNorm.y;
-    movable2.speed.x += speed * vCollisionNorm.x;
-    movable2.speed.y += speed * vCollisionNorm.y;
+    vector1.x -= speed * vCollisionNorm.x;
+    vector1.y -= speed * vCollisionNorm.y;
+    vector2.x += speed * vCollisionNorm.x;
+    vector2.y += speed * vCollisionNorm.y;
   },
   resolveCollisionWithStationaryObject: (
     movingObject,
@@ -93,14 +93,14 @@ export const circleFunctions = {
     const nx = -Math.sin(angle);
     const ny = Math.cos(angle);
 
-    const dot = movingObject.speed.x * nx + movingObject.speed.y * ny;
+    const dot = movingObject.vector.x * nx + movingObject.vector.y * ny;
 
-    movingObject.speed.x = movingObject.speed.x - 2 * dot * nx;
-    movingObject.speed.y = movingObject.speed.y - 2 * dot * ny;
+    movingObject.vector.x = movingObject.vector.x - 2 * dot * nx;
+    movingObject.vector.y = movingObject.vector.y - 2 * dot * ny;
 
     movingObject.position.x =
-      movingObject.position.x + movingObject.speed.x * dt;
+      movingObject.position.x + movingObject.vector.x * dt;
     movingObject.position.y =
-      movingObject.position.y + movingObject.speed.y * dt;
+      movingObject.position.y + movingObject.vector.y * dt;
   },
 };

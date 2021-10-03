@@ -1,7 +1,7 @@
 import { collisionFunctions } from "../collisionFunctions.js";
 import { Collidable } from "../components/Collidable.js";
 import { Destroyable } from "../components/Destroyable.js";
-import { Movable } from "../components/Movable.js";
+import { Vector } from "../components/Vector.js";
 import { System } from "./System.js";
 
 export class MoveSystem extends System {
@@ -10,7 +10,7 @@ export class MoveSystem extends System {
   }
 
   appliesTo(entity) {
-    return entity.hasComponent(Movable);
+    return entity.hasComponent(Vector);
   }
 
   update(entities, dt, game) {
@@ -19,13 +19,13 @@ export class MoveSystem extends System {
         (object) => object.hasComponent(Collidable) && object !== entity
       );
 
-      const movable = entity.getComponent(Movable);
+      const vector = entity.getComponent(Vector);
       // console.log("collidableObjects:", collidableObjects);
 
       // let collisionCount = 0;
       // const maxCollisions = 3;
       let currentPosition = entity.position;
-      let currentSpeed = movable.speed;
+      let currentSpeed = { x: vector.x, y: vector.y };
 
       // let outOfBounds = false;
       let timeLeft = 0.016;
@@ -217,8 +217,6 @@ export class MoveSystem extends System {
           };
 
           timeLeft = earliestCollision.timeLeftAfterCollision;
-
-          console.log("COLLISION:", earliestCollision);
         } else {
           currentPosition.x = currentPosition.x + currentSpeed.x * timeLeft;
           currentPosition.y = currentPosition.y + currentSpeed.y * timeLeft;
@@ -227,7 +225,8 @@ export class MoveSystem extends System {
       }
 
       entity.position = currentPosition;
-      movable.speed = currentSpeed;
+      vector.x = currentSpeed.x;
+      vector.y = currentSpeed.y;
     }
   }
 

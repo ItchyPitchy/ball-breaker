@@ -1,15 +1,15 @@
 import { Entity } from "./Entity.js";
 import { Physical } from "../components/Physical.js";
-import { Movable } from "../components/Movable.js";
+import { Vector } from "../components/Vector.js";
 import { Collidable } from "../components/Collidable.js";
 
 export class CannonBall extends Entity {
-  constructor(position, radii, speed = { x: 0, y: 0 }) {
+  constructor(position, radii, velocity = { x: 0, y: 0 }) {
     super(position, true);
     this.radii = radii;
     this.addComponents(
       new Physical(500),
-      new Movable(speed),
+      new Vector(velocity.x, velocity.y),
       new Collidable(0.95)
     );
   }

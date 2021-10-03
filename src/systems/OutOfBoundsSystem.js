@@ -1,4 +1,4 @@
-import { Movable } from "../components/Movable.js";
+import { Vector } from "../components/Vector.js";
 import { System } from "./System.js";
 
 export class OutOfBoundsSystem extends System {
@@ -7,12 +7,12 @@ export class OutOfBoundsSystem extends System {
   }
 
   appliesTo(entity) {
-    return entity.inBoundsOnly && entity.hasComponent(Movable);
+    return entity.inBoundsOnly && entity.hasComponent(Vector);
   }
 
   update(entities, dt, game) {
     for (const entity of entities) {
-      const speed = entity.getComponent(Movable).speed;
+      const speed = entity.getComponent(Vector).speed;
 
       //wall on right
       if (entity.position.x + entity.radii >= game.gameWidth) {
