@@ -6,6 +6,13 @@ export class Entity {
     this.markedForDeletion = false;
   }
 
+  distanceTo(entity) {
+    return Math.sqrt(
+      Math.pow(this.position.x - entity.position.x, 2) +
+        Math.pow(this.position.y - entity.position.y, 2)
+    );
+  }
+
   getComponent(type) {
     for (const component of this.components) {
       if (component instanceof type) {
