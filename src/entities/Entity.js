@@ -49,11 +49,4 @@ export class Entity {
       (component) => component instanceof type
     );
   }
-
-  draw(ctx) {
-    ctx.fillStyle = "#00f";
-    ctx.beginPath();
-    ctx.arc(this.position.x, this.position.y, 16, 0, 2 * Math.PI);
-    ctx.fill();
-  }
 }

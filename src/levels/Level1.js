@@ -27,7 +27,7 @@ export class Level1 extends Level {
     super(entities, systems, structure, 12);
   }
 
-  clone(game) {
+  clone() {
     const clone = new Level1(game);
     const entities = this.entities.map((entity) => entity.clone());
     const systems = this.system.map((system) => system.clone());

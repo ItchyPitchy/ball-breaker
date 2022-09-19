@@ -57,12 +57,12 @@ export class ShootSystem extends System {
             mousePosDistance.y * mousePosDistance.y
         );
 
-        if (mousePosMagnitude > 200) {
-          mousePosMagnitude = 200;
+        if (mousePosMagnitude > 400) {
+          mousePosMagnitude = 400;
         }
 
-        if (mousePosMagnitude < 50) {
-          mousePosMagnitude = 50;
+        if (mousePosMagnitude < 200) {
+          mousePosMagnitude = 200;
         }
 
         const targetDistance = {
@@ -70,17 +70,21 @@ export class ShootSystem extends System {
           y: Math.sin(entity.degrees) * mousePosMagnitude,
         };
 
-        let magnitude = Math.sqrt(
-          targetDistance.x * targetDistance.x +
-            targetDistance.y * targetDistance.y
-        );
+        // Är nedanstående kod nödvändig??
 
-        const norm = {
-          x: targetDistance.x / magnitude,
-          y: targetDistance.y / magnitude,
-        };
+        // let magnitude = Math.sqrt(
+        //   targetDistance.x * targetDistance.x +
+        //     targetDistance.y * targetDistance.y
+        // );
 
-        let speed = { x: norm.x * magnitude * 4, y: norm.y * magnitude * 4 };
+        // const norm = {
+        //   x: targetDistance.x / magnitude,
+        //   y: targetDistance.y / magnitude,
+        // };
+
+        // let speed = { x: norm.x * magnitude, y: norm.y * magnitude };
+
+        let speed = targetDistance;
 
         // 50 is the length from the rotate axis to the end of the visual cannon
         const startPosition = {
@@ -111,6 +115,8 @@ export class ShootSystem extends System {
         let outOfBounds = false;
         let collisionCount = 0;
         const maxCollisions = 3;
+
+        game.ctx.save();
 
         while (collisionCount < maxCollisions && !outOfBounds) {
           // add acceleration speed
@@ -300,12 +306,12 @@ export class ShootSystem extends System {
               );
               game.ctx.stroke();
 
-              game.ctx.fillStyle = "red";
+              game.ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
               game.ctx.beginPath();
               game.ctx.arc(
                 earliestCollision.position.x,
                 earliestCollision.position.y,
-                3,
+                16,
                 0,
                 2 * Math.PI
               );
@@ -337,6 +343,7 @@ export class ShootSystem extends System {
             }
           }
         }
+        game.ctx.restore();
       }
     }
   }

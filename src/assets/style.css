@@ -9,11 +9,16 @@ body {
   padding: 0;
 }
 
-#gameScreen {
+/* #gameScreen {
   border: solid 1px black;
   padding: auto;
-}
+  width: 800px;
+  height: 600px;
+} */
 
 .image {
   display: none;
+}
+
+canvas {
 }

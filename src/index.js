@@ -3,6 +3,8 @@ import Game from "./game.js";
 
 const canvas = document.querySelector("#gameScreen");
 const ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 600;

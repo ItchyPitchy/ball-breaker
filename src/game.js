@@ -138,6 +138,7 @@ export default class Game {
       this.gamestate === this.gamestates.PAUSED ||
       this.gamestate === this.gamestates.RUNNING
     ) {
+      ctx.save();
       ctx.font = "30px Arial";
       ctx.fillStyle = "Black";
       ctx.textAlign = "center";
@@ -146,9 +147,11 @@ export default class Game {
         this.gameWidth - 60,
         this.gameHeight - 10
       );
+      ctx.restore();
     }
 
     if (this.gamestate === this.gamestates.PAUSED) {
+      ctx.save();
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
       ctx.fillStyle = "rgba(0,0,0,0.5)";
       ctx.fill();
@@ -157,9 +160,11 @@ export default class Game {
       ctx.fillStyle = "White";
       ctx.textAlign = "center";
       ctx.fillText("Paused", this.gameWidth / 2, this.gameHeight / 2);
+      ctx.restore();
     }
 
     if (this.gamestate === this.gamestates.WIN) {
+      ctx.save();
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
       ctx.fillStyle = "#000";
       ctx.fill();
@@ -172,9 +177,11 @@ export default class Game {
         this.gameWidth / 2,
         this.gameHeight / 2
       );
+      ctx.restore();
     }
 
     if (this.gamestate === this.gamestates.MENU) {
+      ctx.save();
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
       ctx.fillStyle = "#000";
       ctx.fill();
@@ -183,9 +190,11 @@ export default class Game {
       ctx.fillStyle = "White";
       ctx.textAlign = "center";
       ctx.fillText("Press to start", this.gameWidth / 2, this.gameHeight / 2);
+      ctx.restore();
     }
 
     if (this.gamestate === this.gamestates.GAMEOVER) {
+      ctx.save();
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
       ctx.fillStyle = "#000";
       ctx.fill();
@@ -194,9 +203,11 @@ export default class Game {
       ctx.fillStyle = "White";
       ctx.textAlign = "center";
       ctx.fillText("GAME OVER", this.gameWidth / 2, this.gameHeight / 2);
+      ctx.restore();
     }
 
     if (this.gamestate === this.gamestates.NEWLEVEL) {
+      ctx.save();
       ctx.rect(0, 0, this.gameWidth, this.gameHeight);
       ctx.fillStyle = "#000";
       ctx.fill();
@@ -205,6 +216,7 @@ export default class Game {
       ctx.fillStyle = "White";
       ctx.textAlign = "center";
       ctx.fillText("You won!", this.gameWidth / 2, this.gameHeight / 2);
+      ctx.restore();
     }
   }
 
